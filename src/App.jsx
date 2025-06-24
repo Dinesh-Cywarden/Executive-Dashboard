@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Link, 
-  Monitor, 
-  Plus, 
   ExternalLink, 
-  Trash2, 
-  Eye, 
   BarChart3, 
-  PlusCircle 
+  Network, 
+  FolderX,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 const DashboardCentralizer = () => {
   const [dashboards, setDashboards] = useState([]);
-  const [currentMode, setCurrentMode] = useState('links');
-  const [dashboardName, setDashboardName] = useState('');
-  const [dashboardUrl, setDashboardUrl] = useState('');
-  const [selectedDashboardId, setSelectedDashboardId] = useState('');
-  const [embeddedUrl, setEmbeddedUrl] = useState('');
+  const [theme, setTheme] = useState('dark');
 
-  // Initialize with sample data
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.add('light');
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
+
   useEffect(() => {
     const sampleDashboards = [
       {
@@ -37,127 +45,73 @@ const DashboardCentralizer = () => {
     setDashboards(sampleDashboards);
   }, []);
 
-  const isValidUrl = (string) => {
-    try {
-      new URL(string);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  };
-
-  const addDashboard = () => {
-    if (!dashboardName.trim() || !dashboardUrl.trim()) {
-      alert('Please fill in both dashboard name and URL');
-      return;
-    }
-
-    if (!isValidUrl(dashboardUrl)) {
-      alert('Please enter a valid URL');
-      return;
-    }
-
-    const newDashboard = {
-      id: Date.now(),
-      name: dashboardName,
-      url: dashboardUrl,
-      addedDate: new Date().toLocaleDateString()
-    };
-
-    setDashboards(prev => [...prev, newDashboard]);
-    setDashboardName('');
-    setDashboardUrl('');
-  };
-
-  const removeDashboard = (id) => {
-    if (window.confirm('Are you sure you want to remove this dashboard?')) {
-      setDashboards(prev => prev.filter(d => d.id !== id));
-    }
-  };
-
   const openDashboard = (url) => {
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const embedDashboard = (url, name) => {
-    const dashboard = dashboards.find(d => d.url === url);
-    if (dashboard) {
-      setCurrentMode('embedded');
-      setSelectedDashboardId(dashboard.id.toString());
-      setEmbeddedUrl(url);
-    }
-  };
-
-  const loadSelectedDashboard = () => {
-    if (!selectedDashboardId) {
-      setEmbeddedUrl('');
-      return;
-    }
-
-    const dashboard = dashboards.find(d => d.id.toString() === selectedDashboardId);
-    if (dashboard) {
-      setEmbeddedUrl(dashboard.url);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      addDashboard();
-    }
-  };
-
-  const ModeToggle = () => (
-    <div className="flex bg-white/90 rounded-xl p-2 mb-8 shadow-lg backdrop-blur-sm">
-      <button 
-        onClick={() => setCurrentMode('links')}
-        className={`flex-1 py-4 px-6 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-3 ${
-          currentMode === 'links' 
-            ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
-            : 'text-gray-600 hover:bg-blue-50'
-        }`}
-      >
-        <Link size={20} />
-        Dashboard Links
-      </button>
-    </div>
+  const ThemeToggle = () => (
+    <button
+      onClick={toggleTheme}
+      className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+        theme === 'dark' 
+          ? 'bg-slate-800/50 text-slate-200 hover:bg-slate-700' 
+          : 'bg-slate-200/50 text-slate-800 hover:bg-slate-300'
+      }`}
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+    >
+      {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+    </button>
   );
 
   const StatsBar = () => (
-    <div className="flex gap-5 mb-8 flex-wrap">
-      <div className="bg-white p-6 rounded-xl shadow-lg text-center flex-1 min-w-40">
-        <div className="text-3xl font-bold text-blue-600">{dashboards.length}</div>
-        <div className="text-gray-600 text-sm mt-1">Total Dashboards</div>
+    <div className="flex justify-center">
+      <div className={`p-6 rounded-xl shadow-lg text-center transition-colors ${
+        theme === 'dark'
+          ? 'bg-slate-900/50 border border-slate-700/50'
+          : 'bg-white/50 border border-slate-200'
+      }`}>
+        <div className={`text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-1 ${
+          theme === 'dark'
+            ? 'from-purple-400 to-sky-400'
+            : 'from-purple-600 to-sky-500'
+        }`}>
+          {dashboards.length}
+        </div>
+        <div className={`text-sm tracking-widest uppercase ${
+          theme === 'dark' ? 'text-slate-400' : 'text-slate-600'
+        }`}>
+          Dashboards
+        </div>
       </div>
     </div>
   );
 
- 
-
-  const DashboardCard = ({ dashboard }) => (
-    <div className="bg-white rounded-2xl p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border-l-4 border-blue-500">
+  const DashboardCard = ({ dashboard, index }) => (
+    <div
+      className={`card-animation rounded-2xl p-6 transition-all duration-300 ${
+        theme === 'dark'
+          ? 'bg-slate-900/50 shadow-lg border border-slate-800 hover:shadow-purple-500/20 hover:border-slate-700'
+          : 'bg-white shadow-lg border border-slate-200 hover:shadow-purple-500/10 hover:border-slate-300'
+      }`}
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-bold text-gray-800 flex-1">{dashboard.name}</h3>
-        <div className="flex gap-2">
-          <button
-            onClick={() => openDashboard(dashboard.url)}
-            className="p-2 bg-teal-50 text-teal-600 rounded-lg hover:scale-110 transition-all duration-300"
-            title="Open in new tab"
-          >
-            <ExternalLink size={16} />
-          </button>
-          <button
-            onClick={() => removeDashboard(dashboard.id)}
-            className="p-2 bg-red-50 text-red-600 rounded-lg hover:scale-110 transition-all duration-300"
-            title="Remove dashboard"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
+        <h3 className={`text-xl font-semibold flex-1 pr-4 ${
+          theme === 'dark' ? 'text-slate-100' : 'text-slate-800'
+        }`}>
+          {dashboard.name}
+        </h3>
+        <button
+          onClick={() => openDashboard(dashboard.url)}
+          className={`p-2 rounded-full transition-colors duration-300 ${
+            theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'
+          }`}
+          title="Open in new tab"
+        >
+          <ExternalLink size={20} />
+        </button>
       </div>
-      <div className="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 break-all mb-3">
-        {dashboard.url}
-      </div>
-      <div className="text-xs text-gray-400">
+      <div className="text-sm text-slate-500">
         Added: {dashboard.addedDate}
       </div>
     </div>
@@ -166,53 +120,53 @@ const DashboardCentralizer = () => {
   const DashboardGrid = () => {
     if (dashboards.length === 0) {
       return (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500 text-center">
-          <PlusCircle size={64} className="mb-5 opacity-50" />
-          <h3 className="text-2xl font-semibold mb-2">No Dashboards Added</h3>
-          <p className="text-lg">Add your first dashboard using the form above</p>
+        <div className="flex flex-col items-center justify-center py-20 text-slate-500 text-center">
+          <FolderX size={64} className="mb-5 opacity-50" />
+          <h3 className="text-2xl font-semibold mb-2">No Dashboards Linked</h3>
         </div>
       );
     }
-
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {dashboards.map(dashboard => (
-          <DashboardCard key={dashboard.id} dashboard={dashboard} />
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {dashboards.map((dashboard, index) => (
+          <DashboardCard key={dashboard.id} dashboard={dashboard} index={index} />
         ))}
       </div>
     );
   };
 
-  
-
-
-  const LinksMode = () => (
-    <div>
-      <StatsBar />
-      <DashboardGrid />
-    </div>
-  );
-
-  
-
   return (
-    <div className="h-full self-center m-auto bg-gradient-to-br from-blue-400 via-purple-500 to-purple-700 p-5">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-xl text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
-            Executive Dashboard Hub
-          </h1>
-          <p className="text-gray-600 text-lg">
+    <div className={`min-h-screen p-4 sm:p-8 relative overflow-hidden transition-colors duration-300 ${
+      theme === 'dark' ? 'bg-slate-900 text-slate-300' : 'bg-slate-100 text-slate-800'
+    }`}>
+      {theme === 'dark' && <div className="aurora-background" />}
+      
+      <div className="max-w-7xl mx-auto relative z-10 h-full flex flex-col">
+        <header className="text-center mb-8 relative">
+          <ThemeToggle />
+          <div className="inline-flex items-center justify-center gap-3 mb-3">
+             <Network className={theme === 'dark' ? 'text-purple-400' : 'text-purple-600'} size={36} />
+             <h1 className={`text-4xl sm:text-5xl font-extrabold ${
+               theme === 'dark' ? 'bg-gradient-to-r from-slate-50 to-purple-300 bg-clip-text text-transparent' : 'text-slate-900'
+             }`}>
+                Executive Dashboard Hub
+             </h1>
+          </div>
+          <p className={theme === 'dark' ? 'text-slate-400' : 'text-slate-600'}>
             Centralized access to all your dashboards
           </p>
-        </div>
+        </header>
 
-
-        {/* Content Area */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-xl min-h-[600px]">
-          {currentMode === 'links' ? <LinksMode /> : <EmbeddedMode />}
-        </div>
+        <main className={`flex flex-col flex-1 min-h-0 backdrop-blur-md rounded-2xl p-4 sm:p-8 transition-colors ${
+          theme === 'dark' ? 'bg-slate-900/40 shadow-2xl border border-slate-800' : 'bg-white/50 shadow-xl border border-slate-200'
+        }`}>
+          <StatsBar />
+          
+          {/* CHANGED: Added 'hide-scrollbar' and removed padding classes */}
+          <div className="hide-scrollbar flex-1 min-h-0 overflow-y-auto mt-8">
+            <DashboardGrid />
+          </div>
+        </main>
       </div>
     </div>
   );

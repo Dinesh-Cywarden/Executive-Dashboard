@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+/* Add this to the end of your src/index.css file */
+
+/* 1. The animated aurora background effect */
+.aurora-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right,
+    rgba(168, 85, 247, 0.3),
+    /* purple */
+    rgba(59, 130, 246, 0.2),
+    /* blue */
+    rgba(17, 24, 39, 0.3) /* slate */
+  );
+  filter: blur(80px);
+  animation: spin 20s linear infinite;
+  z-index: 0; /* Ensures it stays in the background */
+}
+
+/* 2. The keyframe animation for the cards fading in */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 3. A custom class to apply this animation */
+.card-animation {
+  /* This tells the element to be ready for animation */
+  animation-name: fade-in-up;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards; /* Stays visible after animating */
+  
+  /* Start the element as invisible before the animation begins */
+  opacity: 0;
+}
+
+
+.dark .aurora-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right,
+    rgba(168, 85, 247, 0.3),
+    rgba(59, 130, 246, 0.2),
+    rgba(17, 24, 39, 0.3)
+  );
+  filter: blur(80px);
+  animation: spin 20s linear infinite;
+  z-index: 0;
+}
+
+/* 2. Keyframes for card animation (works for both themes) */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. A custom class to apply this animation */
+.card-animation {
+  animation-name: fade-in-up;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
+/* Add this to the end of your src/index.css file */
+
+/* A utility class to hide the scrollbar but keep functionality */
+.hide-scrollbar {
+  /* For Firefox */
+  scrollbar-width: none;
+  /* For Internet Explorer and Edge */
+  -ms-overflow-style: none;
+}
+
+/* For Chrome, Safari, and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
