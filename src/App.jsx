@@ -40,6 +40,18 @@ const DashboardCentralizer = () => {
         name: "Security SLA Dashboard",
         url: "https://c.gle/ANiao5oLv-fRTws9MmLIOXFM6IYRWYS3loFJYB9DfWT7INpIGJAeC8Ms9vCK0eFm0VdA9uIqFPGYIwmT6LLI6yT84IOggg0GUcp5l70tEDVD4szYaI48qI75u7vdOMAbtVMPVY2UdkClkrpm95i82F4dMr8lJC_Nl36mNIHHg6_3gBEp1kvSS3BKciZsC7oQw1UgUwS2w3C0W8AJRtO-jgsXIWWeABRPIozR1UY",
         addedDate: new Date().toLocaleDateString()
+      },
+      {
+        id: 3,
+        name: "Guru AI Dashboard",
+        url: "https://c.gle/ANiao5rICSXk76ApkyEspTKVmxNHs6GuzmWWrNgurXHh8KeQnsEzRkFnuIWYLI6haJXhYnBDyRtbZgIVfy705ZJiIhhsggJOAVd0bDqreNwRCid702Uy5u0stAvVY-qcEV2BMH-MrEvdNzE9v6dAcBnHc4NpVDXi97nDr5XYYsaypSFPUKiq2bXiOY29gW8cIOwCchG5OAGdwuHAfkVvPMK6a4RHsWwsoMicsyA",
+        addedDate: new Date().toLocaleDateString()
+      },
+      {
+        id: 4,
+        name: "CW-CG Dashboard",
+        url: "https://c.gle/ANiao5qmjWhE0EMEcXbHMIeP_ONMkpc8E4TOJzPcUokaCgdWSb8Bb0szyT_2riBDgYMCVpV5PvZCtbJvIhvICkUCvhDal6iFz4Xhio7gqCc-gxHshKUxyiChzQMFNW5Zp00wT--o491gA-uyc-XLBzcwXwC0v2yIRs1mVUIIi1y2pzZH3rIU4bBQwKFUAk2MeAUTblCDK4C73kzFQimdPdF6WukpcQOQoxDBEmk",
+        addedDate: new Date().toLocaleDateString()
       }
     ];
     setDashboards(sampleDashboards);
